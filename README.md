@@ -1,13 +1,7 @@
 This repository is home of unCOVERApp, a web application for clinical assessment and annotation of coverage gaps in target genes. 
 
 
-To run locally, you can clone this repository that contains Git Large File Storage objects. You ensure that git-lfs is setup correctly and use the following steps:
-
-
- - Open your terminal
- 
- - Clone unCOVERApp repository
-
+To run locally, you can clone or download this repository or download that contains Git Large File Storage objects. You ensure that git-lfs is setup correctly,  alternatively `sorted.bed.gz`can be downloaded from [googledrive](https://drive.google.com/open?id=1WkFxXYdatkriHqgWwOazhvkl-qW_vaxh). The md5sum of the bed and bed.tbi files can be retrive in [repository](https://github.com/Manuelaio/unCOVERApp/blob/master/md5sum.txt) . 
 
 ``` {r}
 
@@ -27,10 +21,9 @@ cd unCOVERApp
  
 ``` {r}
 
-git lfs fetch --all
+git lfs uninstall
 
 ``` 
-and check md5sum of downloaded file. 
 
 We recommend to check for the following files in the working directory: 
 
