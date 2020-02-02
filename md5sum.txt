@@ -1,0 +1,3 @@
+The md5sum of required annotation files pulled from git-LSF is reported below
+sorted.bed.gz= a4b8be803cb1a1e3f0ef4183d8d15458
+sorted.bed.gz.tbi= 08b36dd846dfe8cb1cf438014370056c
