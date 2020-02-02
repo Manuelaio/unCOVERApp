@@ -12,10 +12,10 @@ unCOVERApp allows:
 
 ### Documentation 
 
-The input BAM file(s) should be processed on a local machine with the bash script available in GitHub [here](https://github.com/Manuelaio/test/blob/master/make_bed.sh) and also at the end of that document. Downloading unCOVERApp folder from GitHub, users found this preprocessing scritp in ` www` folder. 
+The input BAM file(s) should be processed on a local machine with the bash script available in GitHub [here](https://github.com/Manuelaio/unCOVERApp/blob/master/www/make_bed.sh) and also at the end of that document. Downloading unCOVERApp folder from GitHub, users found this preprocessing scritp in ` www` folder. 
 
 
-The bash script requires R v.3.5.1, samtools v.1.9, the companion Rscript ` preprocessing.R ` available in GitHub [here](https://github.com/Manuelaio/test/blob/master/preprocessing.R) and a easy  [configuration file](https://github.com/Manuelaio/unCOVERApp/blob/master/www/uncoverpp.config) to function. Users instruction is available in GitHub on [README.md](https://github.com/Manuelaio/unCOVERApp/blob/master/README.md)
+The bash script requires R v.3.5.1, samtools v.1.9, the companion Rscript ` preprocessing.R ` available in GitHub [here](https://github.com/Manuelaio/unCOVERApp/blob/master/www/preprocessing.R) and a easy  [configuration file](https://github.com/Manuelaio/unCOVERApp/blob/master/www/uncoverapp.config) to function. Users instruction is available in GitHub on [README.md](https://github.com/Manuelaio/unCOVERApp/blob/master/README.md)
 
 
 
