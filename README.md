@@ -1,5 +1,5 @@
 This repository is home of unCOVERApp, a web application for clinical assessment and annotation of coverage gaps in target genes. 
-
+[![Build Status](https://travis-ci.org/Manuelaio/unCOVERApp.svg?branch=master)](https://travis-ci.org/Manuelaio/unCOVERApp)
 
 To run locally, you can clone or download this repository.  `sorted.bed.gz` and  `sorted.bed.gz.tbi` can be downloaded from [googledrive](https://drive.google.com/open?id=1WkFxXYdatkriHqgWwOazhvkl-qW_vaxh). The md5sum of the bed and bed.tbi files can be retrive in [repository](https://github.com/Manuelaio/unCOVERApp/blob/master/md5sum.txt) . 
 
