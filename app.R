@@ -153,92 +153,92 @@ myHome <- function() {
                         plotOutput("ens", dblclick = "plot1_dblclick",  brush = brushOpts( id = "plot1_brush", resetOnNew = TRUE)), dataTableOutput("tabExon")),
                tabPanel("Zoom to sequence", helpText(em("choose a few genomic intervals")),plotOutput("sequence")),
                tabPanel("Annotations on low-coverage positions",helpText(em("dbSNP-annotation collects all consequences found in VEP-defined canonical transcripts")),condformatOutput("uncover_position")) 
-               ),
+             ),
              hr(), 
              
              fluidRow(
                column(12,DT::dataTableOutput("x4"))
              )
-             )
+           )
   )
 }
 myTab1 <- function() {
-             tabPanel("Calculate AF by allele frequency app",
-                      
-                      # Application title
-                      titlePanel("Maximum credible population allele frequency"),
-                      
-                      ##### Bootstrap method for page costruction 
-                      fluidPage(
-                        fluidRow(
-                          ##### Sidebar
-                          column(8,wellPanel(radioButtons("inh",
-                                                          "Inheritance:",
-                                                          choices = list("monoallelic","biallelic"),
-                                                          selected = "monoallelic"),
-                                             
-                                             numericInput("prev","Prevalence = 1 in ... (people)",
-                                                          min = 1,max = 1e8,value = 500),
-                                             options = NULL),
-                                 br(),
-                                 sliderInput("hetA","Allelic heterogeneity:", min = 0, max = 1,value = 0.1),
-                                 sliderInput("hetG",
-                                             "Genetic heterogeneity:", min = 0, max = 1,value = 1),
-                                 br(),
-                                 sliderInput("pen", "Penetrance:", min = 0, max = 1, value = 0.5))),
-                        br(),
-                        column(8,
-                               h3("Maximum credible population AF:"),
-                               h2(textOutput("maxAF"),align="center",style = "color:blue")),
-                        column(8,
-                               h3("Uncorver position",helpText(em("Low-coverage positions excluding sites annotated as variants with AF> maxAF (default maxAF value: 5%)"), 
-                                                               align="center", style="color:blue"), style = "font-size: 100%; width: 100%",condformatOutput("uncoverPosition"))
-                               
-                               
-                        ),
-                        br(),
-                        br(),
-                        downloadButton("download_maxAF", "Download_maxAF", class = "btn-primary",style='padding:4px; font-size:80%', 
-                                       helpText("download low coverage position dbSNFP-annotation filtered by maximum allele frequency",
-                                                class = "btn-primary",style='padding:4px; font-size:60%'))
-                      #)
-                      ))}
-             
-             
+  tabPanel("Calculate AF by allele frequency app",
+           
+           # Application title
+           titlePanel("Maximum credible population allele frequency"),
+           
+           ##### Bootstrap method for page costruction 
+           fluidPage(
+             fluidRow(
+               ##### Sidebar
+               column(8,wellPanel(radioButtons("inh",
+                                               "Inheritance:",
+                                               choices = list("monoallelic","biallelic"),
+                                               selected = "monoallelic"),
+                                  
+                                  numericInput("prev","Prevalence = 1 in ... (people)",
+                                               min = 1,max = 1e8,value = 500),
+                                  options = NULL),
+                      br(),
+                      sliderInput("hetA","Allelic heterogeneity:", min = 0, max = 1,value = 0.1),
+                      sliderInput("hetG",
+                                  "Genetic heterogeneity:", min = 0, max = 1,value = 1),
+                      br(),
+                      sliderInput("pen", "Penetrance:", min = 0, max = 1, value = 0.5))),
+             br(),
+             column(8,
+                    h3("Maximum credible population AF:"),
+                    h2(textOutput("maxAF"),align="center",style = "color:blue")),
+             column(8,
+                    h3("Uncorver position",helpText(em("Low-coverage positions excluding sites annotated as variants with AF> maxAF (default maxAF value: 5%)"), 
+                                                    align="center", style="color:blue"), style = "font-size: 100%; width: 100%",condformatOutput("uncoverPosition"))
+                    
+                    
+             ),
+             br(),
+             br(),
+             downloadButton("download_maxAF", "Download_maxAF", class = "btn-primary",style='padding:4px; font-size:80%', 
+                            helpText("download low coverage position dbSNFP-annotation filtered by maximum allele frequency",
+                                     class = "btn-primary",style='padding:4px; font-size:60%'))
+             #)
+           ))}
+
+
 myTab2 <- function() {            
-             tabPanel("Binomial distribution",
-                      titlePanel("Binomial distribution "),
-                      fluidRow(
-                        column(4,(numericInput("p",
-                                               "Allele Fraction",
-                                               min = 0,
-                                               max = 1,
-                                               value = 0.00001)),
-                               hr(),
-                               numericInput("num_all",
-                                            "Variant reads",
-                                            min=0,
-                                            max=100000,
-                                            value=10),
-                               hr(), 
-                               
-                               textInput(inputId = "start_gp",
-                                         label = "START genomic position"),
-                               
-                               textInput(inputId = "end_gp",
-                                         label = "END genomic position"),   
-                               helpText(em("Specify start and end coordinates for your genomic region of interest"))),
-                        
-                        
-                        column(4,
-                               h2("consideration:"),
-                               h3(htmlOutput("ci"))),
-                        column(4,
-                               h2("Binomial Distribution", plotOutput("bd"))),
-                        column(10, h2("Cumulative distribution function"),
-                               h3(plotOutput("pbinom"))))
-                      
-                               )}
+  tabPanel("Binomial distribution",
+           titlePanel("Binomial distribution "),
+           fluidRow(
+             column(4,(numericInput("p",
+                                    "Allele Fraction",
+                                    min = 0,
+                                    max = 1,
+                                    value = 0.00001)),
+                    hr(),
+                    numericInput("num_all",
+                                 "Variant reads",
+                                 min=0,
+                                 max=100000,
+                                 value=10),
+                    hr(), 
+                    
+                    textInput(inputId = "start_gp",
+                              label = "START genomic position"),
+                    
+                    textInput(inputId = "end_gp",
+                              label = "END genomic position"),   
+                    helpText(em("Specify start and end coordinates for your genomic region of interest"))),
+             
+             
+             column(4,
+                    h2("consideration:"),
+                    h3(htmlOutput("ci"))),
+             column(4,
+                    h2("Binomial Distribution", plotOutput("bd"))),
+             column(10, h2("Cumulative distribution function"),
+                    h3(plotOutput("pbinom"))))
+           
+  )}
 
 
 myabout <- function() {
@@ -256,15 +256,17 @@ ui <- shinyUI(navbarPage("uncoverApp",
                          myTab1(),
                          myTab2(),
                          myabout()
-                        # preprocess()
+                         # preprocess()
 ))
+
+now <- Sys.time()
 
 server <- function (input, output, session){
   options(shiny.maxRequestSize=30*1024^2) 
   
-#attach static scripts  
+  #attach static scripts  
   
-   output$instructionsScript= downloadHandler(filename="make_bed.sh",
+  output$instructionsScript= downloadHandler(filename="make_bed.sh",
                                              content=function(file){
                                                file.copy("./www/make_bed_with_configuration_file.sh",file) # download static file 
                                              })
@@ -276,13 +278,19 @@ server <- function (input, output, session){
                                              content = function(file){
                                                file.copy("./www/uncoverpp.config", file)
                                              })
-source('server-reactiveDF.R', local= TRUE)  
-source('server-tables.R', local= TRUE)
-source('server-plots.R', local=TRUE)
-source('server-annotation.R', local=TRUE)    
-source('server-maxAF.R', local=TRUE)
-source('server-binomial.R', local=TRUE)  
-  stopApp()
+  source('server-reactiveDF.R', local= TRUE)  
+  source('server-tables.R', local= TRUE)
+  source('server-plots.R', local=TRUE)
+  source('server-annotation.R', local=TRUE)    
+  source('server-maxAF.R', local=TRUE)
+  source('server-binomial.R', local=TRUE)  
+  observe({
+    invalidateLater(1000)
+    print(paste("Actual Time: ", Sys.time(), " - Endtime: ", now + 10))
+    if (Sys.time() > now + 10) {
+      print("Stop the App")
+      stopApp()
+    }
+  })
 }
 shinyApp(server = server, ui = ui)
-
