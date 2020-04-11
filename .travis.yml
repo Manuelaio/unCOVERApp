@@ -2,6 +2,11 @@ language: r
 
 r:
   - 3.5.1
+  
+dist: xenial
+services:
+  - xvfb
+  
 install:
 - R -e "install.packages('devtools')"
 - R -e "devtools::install_github('rstudio/rmarkdown')"
