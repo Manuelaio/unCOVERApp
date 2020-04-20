@@ -16,7 +16,7 @@ We recommend to check for the following files in the working directory:
 
 * `uncoverApp.R script `
 
-in www/ directory: 
+in script/ directory: 
 
 * `preprocessing.R ` 
 
@@ -31,7 +31,7 @@ in www/ directory:
 Compile a `configuration file ` specifying absolute path of: unCOVERApp folder, txt file containing HGNC gene name(s)(one per row), and path to file with ".list" extension containing absolute paths to BAM files (one per row) and folder output location. Compile genome reference (hg19 or hg38) and chromosome notation BAM (number refers to 1, 2, ???X,.M notation BAM, chr refers to chr1, chr2,??? chrX, chrM notation BAM). The resulting unCOVERApp input file is a BED file (tab-separated) containing depth of coverage (DoC) for each genomic position (one per row) of target genes for as many samples as many BAM files are listed in the ".list" file. Finally you run following bash command:
 
 ```sh
-bash www/make_bed.sh www/uncoverapp.config
+bash script/make_bed.sh script/uncoverapp.config
 
 ```
 
