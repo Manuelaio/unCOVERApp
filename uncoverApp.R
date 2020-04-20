@@ -1,7 +1,7 @@
 require(shiny)  
 require(shinyWidgets)
 require(shinyBS)
-library(shinyjs)
+require(shinyjs)
 require(markdown)
 require(DT)
 #options(repos = BiocInstaller::biocinstallRepos())
@@ -14,9 +14,9 @@ require(OrganismDbi)
 require(stringr)
 require(condformat)
 require(shinyjs)
-require(ggbio)
+#require(ggbio)
 require(bedr)
-require(Rsamtools)
+#require(Rsamtools)
 require(TxDb.Hsapiens.UCSC.hg19.knownGene)
 require(TxDb.Hsapiens.UCSC.hg38.knownGene)
 require(BSgenome.Hsapiens.UCSC.hg19)
@@ -29,12 +29,12 @@ require(org.Hs.eg.db)
 mdStyle <- "margin-left: 30px; margin-right: 30px"
 
 intro <- function() {
-  tabPanel("home",
-           includeMarkdown(file.path(".","intro.md")),
+  shiny::tabPanel("home",
+           shiny::includeMarkdown(file.path(".","intro.md")),
            style=mdStyle,
-           downloadLink(outputId = "instructionsScript", label="Download script for making input files", style = "color:white ; background-color: #0067cd"),
-           downloadLink(outputId = "dependence", label="Download required dependecies for the script", style = "color:white ; background-color: #0067cd"),
-           downloadLink(outputId = "configuration_file", label= "Download script for configration bash scritp", style = "color:white ; background-color: #0067cd"),
+           shiny::downloadLink(outputId = "instructionsScript", label="Download script for making input files", style = "color:white ; background-color: #0067cd"),
+           shiny::downloadLink(outputId = "dependence", label="Download required dependecies for the script", style = "color:white ; background-color: #0067cd"),
+           shiny::downloadLink(outputId = "configuration_file", label= "Download script for configration bash scritp", style = "color:white ; background-color: #0067cd"),
            br(),
            br(),
            br()
@@ -42,31 +42,31 @@ intro <- function() {
   )
 }
 myHome <- function() {
-  tabPanel("Coverage Analysis",
+  shiny::tabPanel("Coverage Analysis",
            h1(strong("Interactive web-application to visualize and annotate low-coverage positions in clinical sequencing")),
            #titlePanel("Coverage sequencing Explorer"),
-           helpText(em("Note:Select input options",
+           shiny::helpText(em("Note:Select input options",
                        span("Upload your input bed.gz file with columns: chromosome, start, end, coverage by sample", style = "color:blue"))),
            shinyjs::useShinyjs(),
-           includeScript('www/script.js'),
-           sidebarPanel(    
-             selectInput("UCSC_Genome", 
+           shiny::includeScript('www/script.js'),
+           shiny::sidebarPanel(    
+             shiny::selectInput("UCSC_Genome", 
                          label = "Reference Genome",
                          choices = c("hg19", 
                                      "hg38"),
                          selected = "UCSC genome"),
              hr(),
              
-             textInput(inputId = "Gene_name",
+             shiny::textInput(inputId = "Gene_name",
                        label= "Gene name"),
              #actionButton("button1",label= "Apply"),
-             bsButton("button1",label= "Apply",  icon = icon("power-off"), style = "success", size = "extra-small"),
+             shinyBS::bsButton("button1",label= "Apply",  icon = icon("power-off"), style = "success", size = "extra-small"),
              shinyjs::hidden(p(id = "text1", "Running.....")),
              #actionButton("remove",label= "Refresh"),
-             bsButton("remove",label= "Refresh",  icon = icon("power-off"), style = "success", size = "extra-small"),             helpText(em("write gene name corrisponding coordinate positions and action button apply")), 
+             shinyBS::bsButton("remove",label= "Refresh",  icon = icon("power-off"), style = "success", size = "extra-small"),             helpText(em("write gene name corrisponding coordinate positions and action button apply")), 
              hr(),
              
-             pickerInput("Chromosome", 
+             shinyWidgets::pickerInput("Chromosome", 
                          label = "Chromosome",
                          choices = c("chr1", "chr2","chr3", "chr4","chr5","chr6","chr7","chr8","chr9",
                                      "chr10","chr11","chr12","chr13","chr14","chr15","chr16","chr17",
@@ -75,7 +75,7 @@ myHome <- function() {
                          options = list(`actions-box` = T),
                          multiple =FALSE),
              hr(),
-             pickerInput("coverage_co", 
+             shinyWidgets::pickerInput("coverage_co", 
                          label = "Coverage threshold", 
                          choices = c(1:1000, "all",names("file1")), options = list(`actions-box` = T), multiple =FALSE),
              helpText(em("Select minimum value as coverage threshold")),       
@@ -86,49 +86,59 @@ myHome <- function() {
              helpText(em("Select sample for coverage analysis. Example:sample_1")), 
              
              hr(),
-             splitLayout(cellWidths = c("30%", "70%"), 
+             shiny::splitLayout(cellWidths = c("30%", "70%"), 
                          textInput(inputId = "transcript_id",
                                    label= "Transcript number"), 
                          textInput(inputId = "id_t",
                                    label= "Transcript ID")), #, width = "60px", height = "30px"),
              
-             helpText(em("Retrieve your favourite transcript number from UCSC exons")),
+             shiny::helpText(em("Retrieve your favourite transcript number from UCSC exons")),
              
              
              hr(),
-             pickerInput("exon_number",
+             shinyWidgets::pickerInput("exon_number",
                          label= "exon number",
                          choices = c(1:150),options = list(`actions-box` = T), multiple =FALSE),
              #actionButton("button5",label= "Make exon"),
-             bsButton("button5",label= "Make exon",  icon = icon("power-off"), style = "success", size = "extra-small"),
+             shinyBS::bsButton("button5",label= "Make exon",  icon = icon("power-off"), style = "success", size = "extra-small"),
              shinyjs::hidden(p(id = "text1", "Running.....")),
              #actionButton("remove5",label= "Refresh"),
-             bsButton("remove5",label= "Refresh",  icon = icon("power-off"), style = "default", size = "extra-small"),
+             shinyBS::bsButton("remove5",label= "Refresh",  icon = icon("power-off"), style = "default", size = "extra-small"),
              helpText(em("zooming one exon")), 
              hr(),
              hr(),
              
-             textInput(inputId = "Start_genomicPosition",
+             shiny::textInput(inputId = "Start_genomicPosition",
                        label = "START genomic position"),
              
-             textInput(inputId = "end_genomicPosition",
+             shiny::textInput(inputId = "end_genomicPosition",
                        label = "END genomic position"),   
-             helpText(em("change genomic intervall for zooming")),
+             shiny::helpText(em("change genomic intervall for zooming")),
              
              
              hr(),
              hr(),
-             textInput(inputId = "query_Database",
+             shiny::textInput(inputId = "query_Database",
                        label= "Region coordinates"),
              
              
-             helpText(em("write to expland dbNSFP-annotated genomic positions. For example 2:166845670-166930180")), 
+             shiny::helpText(em("write to expland dbNSFP-annotated genomic positions. For example 2:166845670-166930180")), 
              hr(),
              
              hr(),
-             downloadButton("downloadData", "Download", class = "btn-primary",style='padding:4px; font-size:120%')
-           ),
-           mainPanel(
+             shiny::downloadButton("downloadData", "Download", class = "btn-primary",style='padding:4px; font-size:120%'),
+             hr(),
+             hr(),
+             shiny::tags$button(
+               id = 'close',
+               type = "button",
+               class = "btn action-button",
+               style='color: white; background-color: #dd4b39;
+               padding:4px; font-size:120%',
+               onclick = "setTimeout(function(){window.close();},500);",
+               # close browser
+               "Close App")),
+           shiny::mainPanel(
              fileInput(inputId = "file1",
                        label = "Select input file",
                        accept = c("text/csv",
@@ -139,10 +149,10 @@ myHome <- function() {
                                   ".bed",
                                   "text/comma-separated-values,text/plain",
                                   ".csv")),
-             checkboxInput("header", "Header", TRUE), 
+             shiny::checkboxInput("header", "Header", TRUE), 
              hr(),
              
-             tabsetPanel(
+             shiny::tabsetPanel(
                tabPanel("bed file", dataTableOutput("text")),
                tabPanel("UCSC gene", dataTableOutput("ccg")),
                tabPanel("UCSC exons", helpText(em("Extract protein coding positions from UCSC")), dataTableOutput("exon_pos")),
@@ -282,5 +292,8 @@ source('server-plots.R', local=TRUE)
 source('server-annotation.R', local=TRUE)    
 source('server-maxAF.R', local=TRUE)
 source('server-binomial.R', local=TRUE)  
+  observe({
+    if (input$close > 0) stopApp()
+  })
 }
 shinyApp(server = server, ui = ui)
