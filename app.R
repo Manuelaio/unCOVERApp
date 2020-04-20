@@ -48,7 +48,7 @@ myHome <- function() {
            helpText(em("Note:Select input options",
                        span("Upload your input bed.gz file with columns: chromosome, start, end, coverage by sample", style = "color:blue"))),
            shinyjs::useShinyjs(),
-           includeScript('www/script.js'),
+           includeScript('script/script.js'),
            sidebarPanel(    
              selectInput("UCSC_Genome", 
                          label = "Reference Genome",
@@ -268,15 +268,15 @@ server <- function (input, output, session){
   
   output$instructionsScript= downloadHandler(filename="make_bed.sh",
                                              content=function(file){
-                                               file.copy("./www/make_bed_with_configuration_file.sh",file) # download static file 
+                                               file.copy("./script/make_bed_with_configuration_file.sh",file) # download static file 
                                              })
   output$dependence = downloadHandler(filename="preprocessing.R",
                                       content=function(file){
-                                        file.copy("./www/preprocessing.R",file)
+                                        file.copy("./script/preprocessing.R",file)
                                       })
   output$configuration_file= downloadHandler(filename = "uncoverapp.config",
                                              content = function(file){
-                                               file.copy("./www/uncoverpp.config", file)
+                                               file.copy("./script/uncoverpp.config", file)
                                              })
   source('server-reactiveDF.R', local= TRUE)  
   source('server-tables.R', local= TRUE)
