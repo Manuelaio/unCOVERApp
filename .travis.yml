@@ -11,5 +11,5 @@ install:
 - R -e "devtools::install_github('rstudio/rmarkdown')"
 
 script:
-    - Rscript dependencies.R
+    - Rscript www/dependence.R
     - Rscript -e 'library(methods); shiny::runApp("app.R", launch.browser = TRUE)'
