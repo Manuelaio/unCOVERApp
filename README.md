@@ -1,7 +1,7 @@
 This repository is home of unCOVERApp, a web application for clinical assessment and annotation of coverage gaps in target genes. 
 [![Build Status](https://travis-ci.org/Manuelaio/unCOVERApp.svg?branch=master)](https://travis-ci.org/Manuelaio/unCOVERApp)
 
-To run locally, you can clone or download this repository.  `sorted.bed.gz` and  `sorted.bed.gz.tbi` can be downloaded from [zenodo](https://zenodo.org/record/3747448#.XpBmnVMzbOR). 
+Users can clone or download this repository.  `sorted.bed.gz` and  `sorted.bed.gz.tbi` can be downloaded from [zenodo](https://zenodo.org/record/3747448#.XpBmnVMzbOR). 
 
 
 
