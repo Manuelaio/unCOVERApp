@@ -150,8 +150,14 @@ myHome <- function() {
                                   "text/comma-separated-values,text/plain",
                                   ".csv")),
              shiny::checkboxInput("header", "Header", TRUE), 
+             shinyBS::bsButton("example_data",
+                               label= "load example dataset",
+                               icon = icon("file"), style = "info",
+                               size = "extra-small"),
+             helpText(em("load example dataset with
+                         base coverage counts of POLG gene")),
              hr(),
-             
+             hr(),
              shiny::tabsetPanel(
                tabPanel("bed file", dataTableOutput("text")),
                tabPanel("UCSC gene", dataTableOutput("ccg")),
