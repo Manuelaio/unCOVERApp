@@ -20,7 +20,7 @@ observeEvent(input$file1, {
 })
 
 observeEvent(input$example_data, {
-  polg= read.table("./www/POLG.example.bed.gz")
+  polg= read.table("./script/POLG.example.bed.gz")
   colnames(polg)= c("chromosome","start","end","sample_1")
   mydata(polg)
 })
