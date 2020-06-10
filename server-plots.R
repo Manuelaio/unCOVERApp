@@ -54,30 +54,11 @@ p1<- reactive ({
   
 })
 
-output$all_gene<- renderPlot({
-  validate(
-    need(ncol(mydata()) != "0", "Unrecognized data set: Please
-           upload your file"))  # check error message
-  options(shiny.sanitize.errors = TRUE)
-  progress <- shiny::Progress$new()
-  on.exit(progress$close())
-  progress$set(message = "Please wait a few minutes: Making plot",
-               detail = 'This may take a while', value = 0)
-  for (i in 1:40) {
-    progress$set(message = "Please wait a few minutes: Making plot",
-                 detail = 'This may take a while', value = i)
-    Sys.sleep(1.0)
-  }
-  Sys.sleep(0.1)
-  p1()
-})
-
-output$df.l<- DT::renderDataTable({
-  table1()})
-
 #table of uncovered exons
 
 table1<- reactive({
+  if (is.null(filtered_low()))
+    return(NULL)
   f.low=filtered_low()
   f.low[,'new']='NA'
   f.low$new<- ifelse(sapply(f.low$start, function(p)
@@ -98,6 +79,8 @@ table1<- reactive({
   a_exon=sapply(x, getValue3, data=exon_gp())
   exon=unlist(lapply(a_exon, function (x) ifelse(length (x) > 0, x, NA)))
   exon.df= as.data.frame(exon)
+  if (is.null(exon.df))
+    return(NULL)
   df.l= cbind(l.coverage, exon.df)
   t1=table(df.l$exon)
   df.t1= as.data.frame(t1)
@@ -192,24 +175,3 @@ p3<- reactive({
                       col.baseline = "black",lwd.baseline=0.5,
                       extend.right = 100, extend.left = 0.5)
 })
-
-output$sequence<- renderPlot({
-  validate(
-    need(ncol(mydata()) != "0",
-         "Unrecognized data set: Please load your file"))
-  validate(
-    need(input$Start_genomicPosition < input$end_genomicPosition,
-         "Please selct the right genomic position: end position is
-           lower than start "))
-  options(shiny.sanitize.errors = TRUE)
-  progress <- shiny::Progress$new()
-  for (i in 1:40) {
-    progress$set(message = "Please wait a few minutes: Making plot",
-                 detail = 'This may take a while', value = i)
-    Sys.sleep(1.0)}
-  on.exit(progress$close())
-  Sys.sleep(0.1)
-  p3()
-})
-
-
