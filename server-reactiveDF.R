@@ -1,5 +1,4 @@
-###make reactive database given reference genome 
-
+###make reactive database given reference genome
 txdb= reactive({if (input$UCSC_Genome == "hg19"){
   txdb <- TxDb.Hsapiens.UCSC.hg19.knownGene}
   else{
@@ -14,55 +13,57 @@ observeEvent(input$file1, {
   tmp <- read.table(input$file1$datapath,
                     header = input$header, stringsAsFactors = FALSE)
   colnames(tmp)[1:3]=c("chromosome","start","end")
-  colnames(tmp)[-1:-3]=paste0("sample_", head(seq_along(tmp),-3))
+  n=  length(colnames(tmp)[-1:-3])
+  a=rep(head(seq_along(tmp),-3), each=2)
+  colnames(tmp)[-1:-3]=paste0(c("sample_","nucleotide_"), a[1:n])
   ## do whatever is needed to parse the data
   mydata(tmp)
 })
 
-observeEvent(input$example_data, {
-  polg= read.table("./script/POLG.example.bed.gz")
-  colnames(polg)= c("chromosome","start","end","sample_1")
-  mydata(polg)
+observeEvent(input$pileup, {
+  
+  tmp_pileup <- pileup_input()
+  colnames(tmp_pileup)[1:3]=c("chromosome","start","end")
+  n=  length(colnames(tmp_pileup)[-1:-3])
+  a=rep(head(seq_along(tmp_pileup),-3), each=2)
+  colnames(tmp_pileup)[-1:-3]=paste0(c("sample_","nucleotide_"), a[1:n])
+  ## do whatever is needed to parse the data
+  mydata(tmp_pileup)
 })
 
-###Output of loaded file 
-
-
-output$text<- #DT::renderDataTable({
-  DT::renderDataTable({
-    #validate(need(input$file1 != "", "Please, upload your file"))
-    validate(need(ncol(mydata()) != "0", "Please, upload your file"))
-    mydata()})
 
 ###make reactive dataset given input choosed by users
 
 mysample<-reactive({
-  i= input$Sample
+  if (is.null(mydata()))
+    return(NULL)
+  #i= input$Sample
+  num= input$Sample
+  i=paste0("sample_",num)
+  nucleodites= paste0("nucleotide_",num)
   #print(mydata())
   mydata() %>%
-    dplyr:: select(chromosome, start, end,i) %>%
-    dplyr::rename(value=i)
+    dplyr:: select(chromosome, start, end,i,nucleodites) %>%
+    dplyr::rename(value=i) %>%
+    dplyr::rename(counts= nucleodites)
 })
 
+
 filtered_low<- reactive ({
-  #print(mysample())
-  # validate(
-  #need(input$file1 != "", "Unrecognized data set: Please upload your file")
-  #)
+  if (is.null(mysample()))
+    return(NULL)
   mysample() %>%
-    dplyr:: filter(chromosome == input$Chromosome,
-                   value <= as.numeric(input$coverage_co))
-})
-filtered_high<- reactive ({
-  mysample() %>%
-    dplyr:: filter(chromosome == input$Chromosome,
-                   value > as.numeric(input$coverage_co))
+    dplyr::select(-c(counts)) %>%
+    dplyr::filter(chromosome == input$Chromosome,
+                  value <= as.numeric(input$coverage_co))
   
 })
 
-#######output dateset filtered 
-output$text_cv <- DT::renderDataTable({
-  validate(need(input$Gene_name != "" & input$Sample !="",
-                "Please select all required input: Gene, Chromosome,
-                  Coverage threshold and Sample"))
-  filtered_low()})
+filtered_high<- reactive ({
+  if (is.null(mysample()))
+    return(NULL)
+  mysample() %>%
+    dplyr::select(-c(counts)) %>%
+    dplyr::filter(chromosome == input$Chromosome,
+                  value > as.numeric(input$coverage_co))
+})
