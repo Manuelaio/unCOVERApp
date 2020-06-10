@@ -1,3 +1,5 @@
+# unCOVERApp uses external libraries that need to be installed prior to the R packages from CRAN and from Bioconductor:
+
 setRepositories(ind = 1:5)
 install.packages(c('shiny', 'shinydashboard'), repos='http://cran.rstudio.com/')
 install.packages('BiocManager')
