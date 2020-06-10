@@ -140,7 +140,7 @@ below to retrieve your absolute path and write `bam.list` file.
 
 ``` {r}
  bam.path= paste(getwd(),"/script/example_POLG.bam", sep = "")
- write.table(path, file= "./script/bam.list", quote= F, row.names = F, col.names = F)
+ write.table(bam.path, file= "./script/bam.list", quote= F, row.names = F, col.names = F)
 
 ``` 
 
