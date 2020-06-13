@@ -25,6 +25,11 @@ To prepare input file and investigate coverage annotation the following **input 
 - ` notation ` : chromosome notation BAM,  `number` refers to 1, 2, ..., X,.M 
                 notation BAM, `chr` refers to chr1, chr2, ... chrX, chrM notation BAM
 
+- ` minum Mapping Quality (MAPQ)`: minimum MAPQ value for an alignment to be 
+                                  included in pileup (optional)
+                                  
+-  ` minimum QUAL`:   value for each nucleotide in an alignment ((optional)                         
+
 -  ` Load a gene(s) file ` : loading txt file containing HGNC gene name(s)
                              (one per row)
 
