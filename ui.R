@@ -61,6 +61,16 @@ preprocess <- function() {
                                                   choices = c("chr", "number"),
                                                   options = list(`actions-box` = TRUE),
                                                   multiple =FALSE),
+
+                        shinyWidgets::pickerInput("MAPQ",
+                                                  label = "minum Mapping Quality (MAPQ)",
+                                                  choices = c(1:1000),
+                                                  options = list(`actions-box` = TRUE), multiple =FALSE),
+
+                        shinyWidgets::pickerInput("base_qual",
+                                                  label = "minimum Base Quality",
+                                                  choices = c(1:1000),
+                                                  options = list(`actions-box` = TRUE), multiple =FALSE),
                         hr(),
 
                         fileInput(inputId = "gene1",
