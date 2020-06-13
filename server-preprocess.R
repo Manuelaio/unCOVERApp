@@ -47,7 +47,7 @@ no_entrID<- reactive({
    colnames(errore)[1]= " the following HGNC official gene names are
    unrecognizable, please choose a correct name and reload a file"
    return(errore)
-   
+
 })
 
 
@@ -59,7 +59,7 @@ pileup_input<- reactive({
       return(NULL)
    if(nrow(no_entrID())!=0)
       return(no_entrID())
-   
+
    gene_list1= gene_list()
    my_gene_name=OrganismDbi::select(org.Hs.eg.db, key= gene_list1,
                                     columns="ENTREZID", keytype="ALIAS")
@@ -83,33 +83,33 @@ pileup_input<- reactive({
    }
    colnames(for_bed)=c('chr', 'start', 'end')
    for_bed= unique(for_bed)
-   
-   
+
+
    if(input$notation == "number"){
       for_bed$chr= gsub("^.{0,3}", "", for_bed$chr, perl =TRUE)}
-   
+
    for_grange<-GenomicRanges::makeGRangesFromDataFrame(for_bed,
                                                        keep.extra.columns = TRUE)
    #print(for_grange)
    param <- Rsamtools::ScanBamParam(which= for_grange)
-   
+
    p_param <- Rsamtools::PileupParam(distinguish_nucleotides=TRUE,
                                      distinguish_strands=FALSE,
-                                     min_mapq=1,
-                                     min_base_quality=1,
+                                     min_mapq=as.numeric(input$MAPQ),
+                                     min_base_quality=as.numeric(input$base_qual),
                                      min_nucleotide_depth=1,
                                      max_depth=150000)
-   
-   
+
+
    df= list()
    for (i in list_bam()){
       pileup_df= Rsamtools::pileup(i, scanBamParam=param, pileupParam=p_param)
-      
+
       df=rlist::list.append(df, pileup_df)
    }
    lst1 <- lapply(df, function(x) transform(x[,-5]))
    lst2<- lapply(lst1, function(x) transform(x[!duplicated(x),]))
-   
+
    riarrange.df = function(list_df){
       require(dplyr)
       list_df %>%
@@ -120,9 +120,9 @@ pileup_input<- reactive({
          dplyr::summarise(value= as.numeric(paste(sum(count))),
                           counts=paste(nucleotide, count, sep=':',collapse=';'))
    }
-   
+
    lst3<- lapply(lst2, riarrange.df)
-   
+
    pp=Reduce(function(...) merge(...,by= c("seqnames", "pos", "end"), all=TRUE), lst3)
    pp[is.na(pp)] <- 0
    pp=as.data.frame(pp)
