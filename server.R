@@ -8,7 +8,7 @@ server <- function (input, output, session){
                                       content=function(file){
                                         file.copy("./script/Rpreprocessing.R",file)
                                       })
-  
+
   #source script to load dataset or example file
   source('server-preprocess.R', local= TRUE)
   output$input1<- renderDataTable({
@@ -19,8 +19,8 @@ server <- function (input, output, session){
                  detail = 'This may take a while', value = 0)
     Sys.sleep(0.1)
     validate(
-      need(try(!is.null(pileup_input())), "please upload a list with correct gene names and existent
-         bam paths list"))
+      need(try(!is.null(pileup_input())), "please upload a file with HGNC gene names and
+         absolute path(s) to BAM file"))
     pileup_input()
   })
 
