@@ -46,7 +46,7 @@ preprocess <- function() {
                                       label="Download Rscript to obtain bed.file
                                       from large genes list",
                                       style = "color:white ; background-color: #0067cd"),
-                  h1(strong("Preprare your input file")),
+                  h1(strong("Prepare your input file")),
                   fluidPage(
                     sidebarLayout(
                       sidebarPanel(
@@ -57,7 +57,7 @@ preprocess <- function() {
                                            selected = "UCSC genome"),
                         hr(),
                         shinyWidgets::pickerInput("notation",
-                                                  label = "Notation BAM",
+                                                  label = "Chromosome Notation",
                                                   choices = c("chr", "number"),
                                                   options = list(`actions-box` = TRUE),
                                                   multiple =FALSE),
@@ -106,7 +106,7 @@ myHome <- function() {
            h1(strong("Interactive web-application to visualize and annotate low-coverage positions in clinical sequencing")),
            #titlePanel("Coverage sequencing Explorer"),
            shiny::helpText(em("Note:Select input options",
-                       span("Upload your input bed.gz file with columns: chromosome, start, end, coverage and nucleotide by sample", style = "color:blue"))),
+                       span("Upload your input BED file with columns: chromosome, start, end, coverage and nucleotide by sample", style = "color:blue"))),
            shinyjs::useShinyjs(),
            shiny::includeScript('script/script.js'),
            sidebarPanel(
@@ -126,8 +126,7 @@ myHome <- function() {
              #actionButton("remove",label= "Refresh"),
              shinyBS::bsButton("remove",label= "Refresh",  icon = icon("power-off"),
                                style = "success", size = "extra-small"),
-             helpText(em("write gene name corrisponding coordinate
-                         positions and action button apply")),
+             helpText(em("write gene name and push apply button")),
              hr(),
 
              shinyWidgets::pickerInput("Chromosome",
