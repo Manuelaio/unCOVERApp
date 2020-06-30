@@ -12,17 +12,28 @@ intBED<- reactive({
   bedA<- filtered_low_nucl()
   #print(bedA)
   file.name = ("sorted.bed.gz") #ANNOTATION FILE IN THE FOLDER OF SHINY SCRITP !!!second and tirth columns are hg19 positions 
-  query.regions <- c(input$query_Database)
+  query <- c(input$query_Database)
+  #if (is.null(query.regions))
+   # return(NULL)
+  query.regions= read.table(text=gsub("[:-]+", " ", query, perl=TRUE),
+                            header=FALSE, col.names = c("chr", "start", "end"))
   if (is.null(query.regions))
     return(NULL)
   print(query.regions)
-  result <- try({
-    bedB <- tabix(query.regions, file.name, check.chr = FALSE)
-  }, silent = TRUE)
+  result<- try({
+    fq= GenomicRanges::makeGRangesFromDataFrame(query.regions, keep.extra.columns = TRUE)
+    res <- Rsamtools::scanTabix(file.name, param=fq)
+    sapply(res, length)
+    dff <- Map(function(elt) {
+      read.csv(textConnection(elt), sep="\t", header=FALSE, stringsAsFactors = FALSE)
+    }, res)
+    bedB <- as.data.frame(dff)
+  })
+  print(query.regions)
+  
   if ("try-error" %in% class(result)) {
     err_msg <- 'no coordinates recognized'}
-  #print(err_msg)
-  #print(head(bedB))
+  
   colnames(bedB)<- c ('Chromo', 'start_hg19','end_hg19','REF','ALT',
                       'dbsnp','GENENAME', 'PROTEIN_ensembl', 'start_hg38',
                       'end_hg38','MutationAssessor','SIFT','Polyphen2',
@@ -30,7 +41,7 @@ intBED<- reactive({
                       'clinvar_MedGen_id','clinvar_OMIM_id','HGVSc_VEP',
                       'HGVSp_VEP')
   #print(head(bedB))
-  str(bedB)
+  #str(bedB)
   if (input$UCSC_Genome == "hg19"){
     bedB<- bedB %>%
       dplyr::rename(
