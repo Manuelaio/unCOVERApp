@@ -28,6 +28,7 @@ require(EnsDb.Hsapiens.v75)
 require(EnsDb.Hsapiens.v86)
 require(org.Hs.eg.db)
 require(openxlsx)
+options("browser" = "xdg-open")
 
 mdStyle <- "margin-left: 30px; margin-right: 30px"
 
@@ -101,12 +102,16 @@ preprocess <- function() {
                         ) )
                     )))
 }
+
 myHome <- function() {
-  shiny::tabPanel( "Coverage Analysis",
-           h1(strong("Interactive web-application to visualize and annotate low-coverage positions in clinical sequencing")),
+  tabPanel("Coverage Analysis",
+           h1(strong("Interactive web-application to visualize and
+                     annotate low-coverage positions in clinical sequencing")),
            #titlePanel("Coverage sequencing Explorer"),
-           shiny::helpText(em("Note:Select input options",
-                       span("Upload your input BED file with columns: chromosome, start, end, coverage and nucleotide by sample", style = "color:blue"))),
+           helpText(em("Note:Select input options",
+                       span("Upload your input bed
+                            file with columns: chromosome, start, end, coverage
+                            by sample and nucleotide count", style = "color:blue"))),
            shinyjs::useShinyjs(),
            shiny::includeScript('script/script.js'),
            sidebarPanel(
@@ -129,17 +134,20 @@ myHome <- function() {
              helpText(em("write gene name and push apply button")),
              hr(),
 
-             shinyWidgets::pickerInput("Chromosome",
-                                       label = "Chromosome",
-                                       choices = c("chr1", "chr2","chr3", "chr4","chr5",
-                                                   "chr6","chr7","chr8","chr9","chr10",
-                                                   "chr11","chr12","chr13","chr14","chr15",
-                                                   "chr16","chr17",
-                                                   "chr18","chr19", "chr20", "chr21",
-                                                   "chr22", "chrX", "chrY","chrM",
-                                                   names("file1")),
-                                       options = list(`actions-box` = TRUE),
-                                       multiple =FALSE),
+             textInput(inputId ="Chromosome",
+                       label = "Chromosome"),
+
+             #shinyWidgets::pickerInput("Chromosome",
+             #                         label = "Chromosome",
+             #                        choices = c("chr1", "chr2","chr3", "chr4","chr5",
+             #                                   "chr6","chr7","chr8","chr9","chr10",
+             #                                  "chr11","chr12","chr13","chr14","chr15",
+             #                                 "chr16","chr17",
+             #                                "chr18","chr19", "chr20", "chr21",
+             #                               "chr22", "chrX", "chrY","chrM",
+             #                              names("file1")),
+             #                 options = list(`actions-box` = TRUE),
+             #                multiple =FALSE),
              hr(),
              shinyWidgets::pickerInput("coverage_co",
                                        label = "Coverage threshold",
@@ -186,7 +194,7 @@ myHome <- function() {
 
              textInput(inputId = "end_genomicPosition",
                        label = "END genomic position"),
-             helpText(em("change genomic intervall for zooming")),
+             helpText(em("change genomic interval for zooming")),
 
 
              hr(),
@@ -195,7 +203,7 @@ myHome <- function() {
                        label= "Region coordinates"),
 
 
-             helpText(em("write to expland dbNSFP-annotated genomic positions.
+             helpText(em("write to expand dbNSFP-annotated genomic positions.
                          For example 2:166845670-166930180")),
              hr(),
 
@@ -226,7 +234,7 @@ myHome <- function() {
                                   ".csv")),
              checkboxInput("header", "Header", TRUE),
              shinyBS::bsButton("pileup",
-                               label= "load preprared input file",
+                               label= "load input file",
                                icon = icon("file"), style = "info",
                                size = "default"),
              #shinyBS::bsButton("example_data",
@@ -314,13 +322,15 @@ myTab1 <- function() {
                     h3("Maximum credible population AF:"),
                     h2(textOutput("maxAF"),align="center",style = "color:blue")),
              column(8,
-                    h3("Uncorver position",
+                    h3("Uncover position",
                        helpText(em("Low-coverage positions excluding sites
                                    annotated as variants with AF> maxAF
                                    (default maxAF value: 5%)"),align="center",
                                 style="color:blue"),
                        style = "font-size: 100%; width: 100%",
-                       condformat::condformatOutput("uncoverPosition"))),
+                       shinycssloaders::withSpinner(
+                         condformat::condformatOutput("uncoverPosition")))),
+                       
              br(),
              br(),
              downloadButton("download_maxAF", "Download_maxAF",
@@ -343,22 +353,32 @@ myTab2 <- function() {
                                     "Allele Fraction",
                                     min = 0,
                                     max = 1,
-                                    value = 0.00001)),
+                                    value = 0.05)),
+                    helpText(em("the expected fraction of variant reads
+                    (probability of success)",
+                                align="center",
+                                style="color:gray")),
                     hr(),
                     numericInput("num_all",
                                  "Variant reads",
                                  min=0,
                                  max=100000,
                                  value=10),
+
+                    helpText(em("the minimum number of variant reads required
+                                by the user to support variant evidence,
+                                (number of successes)"),align="center",
+                             style="color:gray"),
                     hr(),
 
                     textInput(inputId = "start_gp",
-                              label = "START genomic position"),
+                              label = "Genomic position"),
 
-                    textInput(inputId = "end_gp",
-                              label = "END genomic position"),
-                    helpText(em("Specify start and end coordinates
-                                for your genomic region of interest"))),
+                    #textInput(inputId = "end_gp",
+                    #         label = "END genomic position"),
+                    helpText(em("Specify a genomic position of interest gene
+                                  in which calculating the
+                                binomial distribution"))),
 
 
              column(4,
