@@ -1,4 +1,4 @@
-### Prepration input file 
+### Preparation input file 
 In this section users can prepare bed file required for clinical 
 assessment of low depth of coverage genomic regions. 
 The resulting unCOVERApp input file is a BED file (tab-separated) containing a 
@@ -8,7 +8,7 @@ many samples as many BAM files are listed in the ".list" file.
 
 
 The processing time depends on the dimension size of bam files and the number of
-genes to invstigate. If many genes need to be analyzed we recommend:
+genes to investigate. If many genes need to be analyzed, we recommend:
 
 -to download Rscritp attached below or use other tools to obtain bed or bed.gz file
 
@@ -28,7 +28,7 @@ To prepare input file and investigate coverage annotation the following **input 
 - ` minum Mapping Quality (MAPQ)`: minimum MAPQ value for an alignment to be 
                                   included in pileup (optional)
                                   
--  ` minimum QUAL`:   value for each nucleotide in an alignment (optional)                         
+-  ` minimum QUAL`:   value for each nucleotide in an alignment ((optional)                         
 
 -  ` Load a gene(s) file ` : loading txt file containing HGNC gene name(s)
                              (one per row)
