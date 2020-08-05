@@ -1,9 +1,9 @@
-##intersection between dbNSFP and filtered user-defined bed file 
 filtered_low_nucl<- reactive ({
-  
+  if (is.null(mysample()))
+    return(NULL)
   mysample() %>%
     dplyr::filter(chromosome == input$Chromosome,
-                  value <= as.numeric(input$coverage_co))
+                  coverage <= as.numeric(input$coverage_co))
 })
 
 intBED<- reactive({
@@ -11,10 +11,8 @@ intBED<- reactive({
     return(NULL)
   bedA<- filtered_low_nucl()
   #print(bedA)
-  file.name = ("sorted.bed.gz") #ANNOTATION FILE IN THE FOLDER OF SHINY SCRITP !!!second and tirth columns are hg19 positions 
+  file.name = ("sorted.bed.gz") #ANNOTATION FILE IN THE FOLDER OF SHINY SCRITP !!!second and tirth columns are hg19 positions
   query <- c(input$query_Database)
-  #if (is.null(query.regions))
-   # return(NULL)
   query.regions= read.table(text=gsub("[:-]+", " ", query, perl=TRUE),
                             header=FALSE, col.names = c("chr", "start", "end"))
   if (is.null(query.regions))
@@ -28,12 +26,17 @@ intBED<- reactive({
       read.csv(textConnection(elt), sep="\t", header=FALSE, stringsAsFactors = FALSE)
     }, res)
     bedB <- as.data.frame(dff)
+
   })
-  print(query.regions)
-  
+  #result <- try({
+  # bedB <- tabix(query.regions, file.name, check.chr = FALSE)
+  #}, silent = TRUE)
   if ("try-error" %in% class(result)) {
     err_msg <- 'no coordinates recognized'}
-  
+  #print(err_msg)
+
+
+  print(head(bedB))
   colnames(bedB)<- c ('Chromo', 'start_hg19','end_hg19','REF','ALT',
                       'dbsnp','GENENAME', 'PROTEIN_ensembl', 'start_hg38',
                       'end_hg38','MutationAssessor','SIFT','Polyphen2',
@@ -41,7 +44,7 @@ intBED<- reactive({
                       'clinvar_MedGen_id','clinvar_OMIM_id','HGVSc_VEP',
                       'HGVSp_VEP')
   #print(head(bedB))
-  #str(bedB)
+  str(bedB)
   if (input$UCSC_Genome == "hg19"){
     bedB<- bedB %>%
       dplyr::rename(
@@ -63,7 +66,7 @@ intBED<- reactive({
         end="end_hg38")
     #print(head(bedB))
   }
-  
+
   for (i in bedB[1]){
     Chromosome<-paste("chr", i, sep="")
     bedB<- cbind(Chromosome, bedB)
