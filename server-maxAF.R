@@ -16,7 +16,7 @@ data <- reactive({
 #output$maxAF <- renderText({signif(data()[[1]],3)})
 
 uncover_maxaf <- reactive ({
-  
+
   condformat(intBED()) %>%
     rule_fill_discrete(ClinVar, expression= ClinVar !=".",
                        colours= c("TRUE"="red", "FALSE"="green")) %>%
@@ -36,7 +36,7 @@ uncover_maxaf <- reactive ({
                                   AF_gnomAD < (signif(data()[[1]],3)),
                                 "red", "green"), #& CADD_PHED > 20
              css_field = "color")
-  
+
 })
 
 
