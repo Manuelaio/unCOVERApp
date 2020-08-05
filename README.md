@@ -43,6 +43,14 @@ git clone https://github.com/Manuelaio/unCOVERApp.git
 
 ``` 
 
+The development version of R package is available at https://github.com/Manuelaio/uncoverappLib Github page and can be installed directly
+
+``` {r}
+install.packages("devtools")
+devtools::install_github("Manuelaio/uncoverappLib")
+
+``` 
+
 
 ## Introduction
 
