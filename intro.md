@@ -90,8 +90,6 @@ specified in the sidebar of the **Coverage Analysis** section:
 
 - ` Gene name ` and push ` Apply ` button:  HGNC official gene name 
 
--  ` Chromosome ` : chromosome number
-
 - ` coverage threshold ` : required coverage threshold  
 
 - ` Sample  ` : sample(s) to analyze according to help text indications on the 
@@ -103,7 +101,7 @@ of ` Exon genomic coordinate positions from UCSC ` output App table.
 - ` exon number ` and push ` Make exon ` : to zoom in a specific exon
 
 
-Other input sections, as ` Transcritp ID `, ` START genomic position `, 
+Other input sections, as ` Chromosome `, ` Transcritp ID `, ` START genomic position `, 
 ` END genomic position ` and ` Region coordinate `, are dynamically filled. 
 
 
@@ -150,4 +148,6 @@ Users must specify as input the `allele fraction` (the expected fraction of
 variant reads, probability of success) and `Variant reads ` (the minimum 
 number of variant reads required by the user to support variant calling,
 number of successes). 
+
+
 
