@@ -1,4 +1,15 @@
 #Tables
+tryObserve <- function(x) {
+  x <- substitute(x)
+  env <- parent.frame()
+  observe({
+    tryCatch(eval(x, env),
+             error = function(e) {
+               #showNotification(paste("Error: ", e$message), type = "error")
+             })
+  })
+}
+
 coord= eventReactive(input$button1,{
   disable("button1")
   shinyjs::show("text1")
@@ -34,9 +45,26 @@ observeEvent(input$button1, {
       need(HGNC_org[HGNC_org %in% input$Gene_name],
            "incorrect HGNC Gene symbol"))
     coord()
-    #print(coord())
+
   })
 })
+
+tryObserve({
+  if (is.null(input$button1) )
+    return()
+  if (is.null(coord()))
+    return(NULL)
+  x= as.data.frame(coord())
+  Chrom= as.character(x$seqnames[1])
+  updateTextInput(session, "Chromosome", value = Chrom)
+})
+
+Chromosome<- reactive({
+  xc= as.character(input$Chromosome)
+  return(xc)
+})
+
+
 
 observeEvent(input$remove,{
   shinyjs::hide(coord())
@@ -64,11 +92,12 @@ exon_gp<-eventReactive(input$button1,{
   exon_Id<- as.data.frame(exoncds)
   exon_table=exon_Id  %>%
     dplyr::select(1:6,8,10)
+  #exon_table=exon_Id[c(1:6,8,10)]
   colnames(exon_table)=c("number_of_transcript",
                          "type_of_transcript", "chrom", "start","end",
                          "length_of_exon", "cds_id", "exon_rank")
   return(exon_table)
-  #print(head(exon_table))
+  print(head(exon_table))
 })
 
 observeEvent(input$button1, {
@@ -79,7 +108,7 @@ observeEvent(input$button1, {
     progress$set(message = "table construction in progress",
                  detail = 'This may take a while', value = 0)
     Sys.sleep(0.1)
-    
+
     HGNC_org <- keys(org.Hs.eg.db, keytype = "SYMBOL")
     validate(
       need(HGNC_org[HGNC_org %in% input$Gene_name],
@@ -88,22 +117,13 @@ observeEvent(input$button1, {
   })
 })
 
+
+
 observeEvent(input$remove,{
   output$exon_pos<- DT::renderDataTable({
     shinyjs::js$reset(exon_gp()) })
 })
 
-
-tryObserve <- function(x) {
-  x <- substitute(x)
-  env <- parent.frame()
-  observe({
-    tryCatch(eval(x, env),
-             error = function(e) {
-               #showNotification(paste("Error: ", e$message), type = "error")
-             })
-  })
-}
 
 tryObserve({
   if (is.null(input$exon_number) )
@@ -118,7 +138,7 @@ tryObserve({
   one=subset(exon_df,
              exon_df$exon_rank == input$exon_number &
                exon_df$number_of_transcript == input$transcript_id)
-  #print(one)
+  print(one)
   start_exon= as.numeric(one$start)
   end_exon= as.numeric(one$end)
   chr= as.numeric(gsub("\\D", "", one$chrom, perl =TRUE))
