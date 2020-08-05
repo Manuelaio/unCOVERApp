@@ -1,8 +1,8 @@
 
 strack<- reactive({if (input$UCSC_Genome == "hg19"){
-  Gviz::SequenceTrack(BSgenome.Hsapiens.UCSC.hg19::Hsapiens, chromosome = input$Chromosome)}
+  Gviz::SequenceTrack(BSgenome.Hsapiens.UCSC.hg19::Hsapiens, chromosome = Chromosome())}
   else{
-    Gviz::SequenceTrack(BSgenome.Hsapiens.UCSC.hg19::Hsapiens, chromosome = input$Chromosome)}
+    Gviz::SequenceTrack(BSgenome.Hsapiens.UCSC.hg19::Hsapiens, chromosome = Chromosome())}
 })
 
 dtrack1<- reactive ({grcoverage <- filtered_low()
@@ -16,32 +16,32 @@ dt2<- Gviz::DataTrack(range = grcoverage_high,type = "histogram", fill.histogram
 })
 
 itrack <- reactive ({
-  i= Gviz::IdeogramTrack(genome =input$UCSC_Genome , chromosome = input$Chromosome)
+  i= Gviz::IdeogramTrack(genome =input$UCSC_Genome , chromosome = Chromosome())
 })
 
 grtrack  <-reactive({
-  ggT<-Gviz::GeneRegionTrack (txdb(), chromosome  = input$Chromosome  ,  start  =  St() ,  end  =  En(),
+  ggT<-Gviz::GeneRegionTrack (txdb(), chromosome  = Chromosome() ,  start  =  St() ,  end  =  En(),
                               showId  =  TRUE , transcriptAnnotation="symbol",
                               name  =  " Gene Annotation ")
   return(ggT)
 })
 #Prepration for all gene coverage plot
 p1<- reactive ({
-  start_gene= coord()$start[coord()$seqnames ==input$Chromosome]
+  start_gene= coord()$start[coord()$seqnames ==Chromosome()]
   if (length(start_gene) > 1)
     start_gene= start_gene[1]
   print(start_gene)
-  end_gene= coord()$end[coord()$seqnames ==input$Chromosome]
+  end_gene= coord()$end[coord()$seqnames ==Chromosome()]
   if (length(end_gene) > 1)
     end_gene= end_gene[1]
   print(end_gene)
-  
+
   ot <- Gviz::OverlayTrack(trackList = list(dtrack1(), dtrackHigh()))
   gtrack <- Gviz::GenomeAxisTrack()
   #ylims <- extendrange(range(c(values(dtrack1()), values(dtrackHigh()))))
   ylims <- grDevices::extendrange(range(c(dtrack1()@data), dtrackHigh()@data))
   gr_ex_track <- Gviz::GeneRegionTrack(txdb(),
-                                       chromosome = input$Chromosome,
+                                       chromosome = Chromosome(),
                                        start = start_gene, end = end_gene,
                                        showId = TRUE,
                                        name = "Gene Annotation")
@@ -51,7 +51,7 @@ p1<- reactive ({
                        ylim=ylims,type = "histogram",baseline=input$coverage_co,
                        col.baseline = "black",lwd.baseline=0.3,
                        extend.left = 0.5, extend.right = 200)
-  
+
 })
 
 #table of uncovered exons
@@ -67,7 +67,7 @@ table1<- reactive({
   validate(
     need(nrow(l.coverage) >0, "ALL EXONS ARE COVERED
          UNDER YOUR CHOOSE THRESHOLD"))
-  
+
   x= l.coverage$start
   getValue3 <- function(x, data) {
     tmp <- data %>%
@@ -75,7 +75,7 @@ table1<- reactive({
       dplyr::filter(number_of_transcript == input$transcript_id)
     return(tmp$exon_rank)
   }
-  
+
   a_exon=sapply(x, getValue3, data=exon_gp())
   exon=unlist(lapply(a_exon, function (x) ifelse(length (x) > 0, x, NA)))
   exon.df= as.data.frame(exon)
@@ -84,7 +84,7 @@ table1<- reactive({
   df.l= cbind(l.coverage, exon.df)
   t1=table(df.l$exon)
   df.t1= as.data.frame(t1)
-  colnames(df.t1)= c('exon','ucovered positions')
+  colnames(df.t1)= c('exon','uncovered positions')
   return(df.t1)
 })
 
@@ -107,7 +107,7 @@ p2<- eventReactive(input$button5, {
   one_trascript= grtrack()[grtrack()@range$transcript== id()]
   print(head(one_trascript))
   grtrack_symbol <- Gviz::GeneRegionTrack(one_trascript@range,
-                                          chromosome = input$Chromosome,
+                                          chromosome = Chromosome(),
                                           start = St(),
                                           end = En(),
                                           showId = TRUE, exonAnnotation="exon",
@@ -130,7 +130,7 @@ p2<- eventReactive(input$button5, {
                       col.baseline = "black",lwd.baseline=0.3,
                       extend.left = 0.5, extend.right = 100,
                       main= paste0('exon',input$exon_number))
-  
+
 })
 
 observeEvent(input$button5,{
@@ -166,7 +166,7 @@ p3<- reactive({
   ot <- Gviz::OverlayTrack(trackList = list(dtrack1(), dtrackHigh()))
   gtrack <- Gviz::GenomeAxisTrack()
   ylims <- grDevices::extendrange(range(c(dtrack1()@data), dtrackHigh()@data))
-  #strack<- SequenceTrack(homo, chromosome = input$Chromosome)
+  #strack<- SequenceTrack(homo, chromosome = Chromosome())
   p3=Gviz::plotTracks(list(itrack(), gtrack, ot,grtrack(), strack()),
                       from = as.numeric(input$Start_genomicPosition),
                       to=as.numeric(input$end_genomicPosition),
@@ -175,3 +175,6 @@ p3<- reactive({
                       col.baseline = "black",lwd.baseline=0.5,
                       extend.right = 100, extend.left = 0.5)
 })
+
+
+
