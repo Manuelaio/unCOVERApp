@@ -6,9 +6,8 @@ server <- function (input, output, session){
 
   output$dependence = downloadHandler(filename="Rpreprocessing.R",
                                       content=function(file){
-                                        file.copy("./script/Rpreprocessing.R",file)
+                                        file.copy(script1,file)
                                       })
-
   #source script to load dataset or example file
   source('server-preprocess.R', local= TRUE)
   output$input1<- renderDataTable({
@@ -19,8 +18,8 @@ server <- function (input, output, session){
                  detail = 'This may take a while', value = 0)
     Sys.sleep(0.1)
     validate(
-      need(try(!is.null(pileup_input())), "please upload a file with HGNC gene names and
-         absolute path(s) to BAM file"))
+      need(try(!is.null(pileup_input())), "please upload a file with HGNC
+      gene names and absolute path(s) to BAM file"))
     pileup_input()
   })
 
@@ -134,11 +133,12 @@ server <- function (input, output, session){
       return(NULL)
     #print(head(condform_table()))
     condform_table() %>%
-      dplyr::select(seqnames, start, end, value, counts, REF, ALT,
+      dplyr::select(seqnames, start, end, coverage, counts, REF, ALT,
                     dbsnp, GENENAME, PROTEIN_ensembl,  MutationAssessor,SIFT,
                     Polyphen2,M_CAP,CADD_PHED,AF_gnomAD,
                     ClinVar,clinvar_MedGen_id,clinvar_OMIM_id,HGVSc_VEP,
-                    HGVSp_VEP)})
+                    HGVSp_VEP)
+  })
 
   #download data wiht conditionalFormatting
 
@@ -151,35 +151,35 @@ server <- function (input, output, session){
       openxlsx::addWorksheet(wb, "Sheet1")
       negStyle <- openxlsx::createStyle(fontColour = "#9C0006", bgFill = "#FFC7CE")
       posStyle <- openxlsx::createStyle(fontColour = "#006100", bgFill = "#C6EFCE")
-      highlighted<- openxlsx::createStyle (fgFill = "yellow")
+      highlighted<-openxlsx::createStyle (fgFill = "yellow")
       hs <- openxlsx::createStyle(textDecoration = "BOLD", fontColour = "#FFFFFF",
-                        fontSize=12,
-                        fontName="Arial Narrow", fgFill = "#4F80BD")
+                                  fontSize=12,
+                                  fontName="Arial Narrow", fgFill = "#4F80BD")
       openxlsx::writeData(wb, "Sheet1",condform_table(), headerStyle = hs)
       openxlsx::conditionalFormatting(wb, "Sheet1",cols=19,
-                            rows=(1:nrow(condform_table())+1),rule='$S2=="H"',
-                            style =negStyle)
+                                      rows=(1:nrow(condform_table())+1),rule='$S2=="H"',
+                                      style =negStyle)
       openxlsx::conditionalFormatting(wb, "Sheet1",cols=19,
-                            rows=(1:nrow(condform_table())+1),
-                            rule='$S2!="H"', style =posStyle)
+                                      rows=(1:nrow(condform_table())+1),
+                                      rule='$S2!="H"', style =posStyle)
       openxlsx::conditionalFormatting(wb, "Sheet1",cols=22,
-                            rows=(1:nrow(condform_table())+1),
-                            rule='$V2=="D"', style =negStyle)
+                                      rows=(1:nrow(condform_table())+1),
+                                      rule='$V2=="D"', style =negStyle)
       openxlsx::conditionalFormatting(wb, "Sheet1",cols=22,
-                            rows=(1:nrow(condform_table())+1),
-                            rule='$V2!="D"', style =posStyle)
+                                      rows=(1:nrow(condform_table())+1),
+                                      rule='$V2!="D"', style =posStyle)
       openxlsx::conditionalFormatting(wb, "Sheet1", cols=23,
-                            rows=(1:nrow(condform_table())+1),
-                            rule=">=20", style = negStyle)
+                                      rows=(1:nrow(condform_table())+1),
+                                      rule=">=20", style = negStyle)
       openxlsx::conditionalFormatting(wb, "Sheet1", cols=23,
-                            rows=(1:nrow(condform_table())+1),
-                            rule="<20", style = posStyle)
+                                      rows=(1:nrow(condform_table())+1),
+                                      rule="<20", style = posStyle)
       openxlsx::conditionalFormatting(wb, "Sheet1", cols=24,
-                            rows=(1:nrow(condform_table())+1),
-                            rule="<=0.05", style = negStyle)
+                                      rows=(1:nrow(condform_table())+1),
+                                      rule="<=0.05", style = negStyle)
       openxlsx::conditionalFormatting(wb, "Sheet1", cols=25,
-                            rows=(1:nrow(condform_table())+1),
-                            rule='!="."', style = negStyle)
+                                      rows=(1:nrow(condform_table())+1),
+                                      rule='!="."', style = negStyle)
       openxlsx::saveWorkbook(wb, file, overwrite = TRUE)
     }
   )
@@ -207,8 +207,9 @@ server <- function (input, output, session){
     on.exit(progress$close())
     progress$set(message = "table construction in progress", value = 0)
     Sys.sleep(0.1)
+
     uncover_maxaf() %>%
-      dplyr::select(seqnames, start, end, value, counts,REF,
+      dplyr::select(seqnames, start, end, coverage, counts,REF,
                     ALT, dbsnp, GENENAME, PROTEIN_ensembl, MutationAssessor,
                     SIFT,Polyphen2,M_CAP,CADD_PHED,AF_gnomAD,
                     ClinVar,clinvar_MedGen_id,clinvar_OMIM_id,
@@ -228,33 +229,33 @@ server <- function (input, output, session){
       posStyle <- openxlsx::createStyle(fontColour = "#006100", bgFill = "#C6EFCE")
       highlighted<-openxlsx::createStyle (fgFill = "yellow")
       hs <- openxlsx::createStyle(textDecoration = "BOLD", fontColour = "#FFFFFF",
-                        fontSize=12,
-                        fontName="Arial Narrow", fgFill = "#4F80BD")
+                                  fontSize=12,
+                                  fontName="Arial Narrow", fgFill = "#4F80BD")
       openxlsx::writeData(wb1, "Sheet2",uncover_maxaf(), headerStyle = hs)
       openxlsx::conditionalFormatting(wb1, "Sheet2",cols=19,
-                            rows=(1:nrow(uncover_maxaf())+1),
-                            rule='$S2=="H"', style =negStyle)
+                                      rows=(1:nrow(uncover_maxaf())+1),
+                                      rule='$S2=="H"', style =negStyle)
       openxlsx::conditionalFormatting(wb1, "Sheet2",cols=19,
-                            rows=(1:nrow(uncover_maxaf())+1),
-                            rule='$S2!="H"', style =posStyle)
+                                      rows=(1:nrow(uncover_maxaf())+1),
+                                      rule='$S2!="H"', style =posStyle)
       openxlsx::conditionalFormatting(wb1, "Sheet2",cols=22,
-                            rows=(1:nrow(uncover_maxaf())+1),
-                            rule='$V2=="D"', style =negStyle)
+                                      rows=(1:nrow(uncover_maxaf())+1),
+                                      rule='$V2=="D"', style =negStyle)
       openxlsx::conditionalFormatting(wb1, "Sheet2",cols=22,
-                            rows=(1:nrow(uncover_maxaf())+1),
-                            rule='$V2!="D"', style =posStyle)
+                                      rows=(1:nrow(uncover_maxaf())+1),
+                                      rule='$V2!="D"', style =posStyle)
       openxlsx::conditionalFormatting(wb1, "Sheet2", cols=23,
-                            rows=(1:nrow(uncover_maxaf())+1),
-                            rule=">=20", style = negStyle)
+                                      rows=(1:nrow(uncover_maxaf())+1),
+                                      rule=">=20", style = negStyle)
       openxlsx::conditionalFormatting(wb1, "Sheet2", cols=23,
-                            rows=(1:nrow(uncover_maxaf())+1),
-                            rule="<20", style = posStyle)
+                                      rows=(1:nrow(uncover_maxaf())+1),
+                                      rule="<20", style = posStyle)
       openxlsx::conditionalFormatting(wb1, "Sheet2", cols=24,
-                            rows=(1:nrow(uncover_maxaf())+1),
-                            rule="<=0.05", style = negStyle)
+                                      rows=(1:nrow(uncover_maxaf())+1),
+                                      rule="<=0.05", style = negStyle)
       openxlsx::conditionalFormatting(wb1, "Sheet2", cols=25,
-                            rows=(1:nrow(uncover_maxaf())+1),
-                            rule='!="."', style = negStyle)
+                                      rows=(1:nrow(uncover_maxaf())+1),
+                                      rule='!="."', style = negStyle)
       openxlsx::saveWorkbook(wb1, file, overwrite = TRUE)
       #condformat2excel(condform_table(), file, sheet_name = "Sheet1",
       #                overwrite_wb = F, overwrite_sheet = T)
@@ -304,16 +305,20 @@ server <- function (input, output, session){
     thr= as.numeric(df_subset())
     # if (thr < input$coverage_co) {
     if (number2 < input$num_all) {
-      print(paste("<span style=\"color:red\">According to binomial
-                  probability model there is 95% probability that your
-                  variant is supported by: </span>", number, number2,
-                  "<span style=\"color:red\"> reads </span>"))
+      print(paste("<span style=\"color:red\">according to the binomial probability model,
+                  there is 95% probability to observe from </span>", number,
+                  "<span style=\"color:red\">to</span>",
+                  number2,
+                  "<span style=\"color:red\"> variant-supporting reads .
+                  </span>"))
 
     }else{
-      print(paste("<span style=\"color:blue\">According to binomial
-                  probability model there is 95% probability that your
-                  variant is supported by: </span>", number, number2,
-                  "<span style=\"color:blue\"> reads </span>"))
+      print(paste("<span style=\"color:blue\">according to the binomial probability model,
+                  there is 95% probability to observe from </span>", number,
+                  "<span style=\"color:blue\">to</span>",
+                  number2,
+                  "<span style=\"color:blue\"> variant-supporting reads
+                  .</span>"))
     }
   })
   observe({
